@@ -1,5 +1,4 @@
 # 🚚 Porter Delivery Time (EDT) Prediction
-Link to website: https://porter-edt-prediction.onrender.com/
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Launch%20App-success?style=for-the-badge&logo=render)](https://porter-edt-prediction.onrender.com)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/shauravkasi-cpu/Delivery-EDT-Prediction)
