@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 
+  (window.location.hostname === 'localhost' && window.location.port === '3000' 
+    ? 'http://localhost:5000' 
+    : '');
 
 // ─── 5 Test Entry Presets ───────────────────────────────────────────────────
 const TEST_ENTRIES = [

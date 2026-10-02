@@ -1,15 +1,22 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import pickle
 import numpy as np
 import os
 
-app = Flask(__name__)
+# ─── Determine directory paths ────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+FRONTEND_BUILD = os.path.join(ROOT_DIR, "frontend", "build")
+
+if os.path.exists(FRONTEND_BUILD):
+    app = Flask(__name__, static_folder=FRONTEND_BUILD, static_url_path="")
+else:
+    app = Flask(__name__)
+
 CORS(app)
 
 # ─── Load artifacts ────────────────────────────────────────────────────────────
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 with open(os.path.join(BASE_DIR, "model.pkl"), "rb") as f:
     model = pickle.load(f)
 
@@ -21,19 +28,19 @@ with open(os.path.join(BASE_DIR, "feature_columns.pkl"), "rb") as f:
 
 print(f"[OK] Loaded model. Features required: {feature_columns}")
 
-# ─── Routes ────────────────────────────────────────────────────────────────────
-
+# ─── API Routes ────────────────────────────────────────────────────────────────
 @app.route("/health", methods=["GET"])
+@app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "features": feature_columns})
 
 
 @app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     try:
         data = request.get_json(force=True)
 
-        # Build feature array in the correct order
         values = []
         missing = []
         for col in feature_columns:
@@ -62,9 +69,23 @@ def predict():
 
 
 @app.route("/features", methods=["GET"])
+@app.route("/api/features", methods=["GET"])
 def get_features():
     return jsonify({"features": feature_columns})
 
 
+# ─── Static Frontend Serving (For single-service Render deployment) ───────────
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve(path):
+    if os.path.exists(FRONTEND_BUILD):
+        if path != "" and os.path.exists(os.path.join(FRONTEND_BUILD, path)):
+            return send_from_directory(FRONTEND_BUILD, path)
+        else:
+            return send_from_directory(FRONTEND_BUILD, "index.html")
+    return jsonify({"message": "Porter AI API is running. Build frontend to see UI."})
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
