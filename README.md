@@ -1,6 +1,10 @@
 # 🚚 Porter Delivery Time (EDT) Prediction
 Link to website: https://porter-edt-prediction.onrender.com/
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Launch%20App-success?style=for-the-badge&logo=render)](https://porter-edt-prediction.onrender.com)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/shauravkasi-cpu/Delivery-EDT-Prediction)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/shauravkasi-cpu/Delivery-EDT-Prediction)
+
 An end-to-end Machine Learning web application that predicts food/package delivery duration (in minutes) for **Porter**, featuring an **XGBoost Regressor**, **Flask REST API**, and a modern **React JS Web Dashboard** with 5 interactive test presets.
 
 ---
